@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="ParkingSimulator/ParkingSimulator.vcxproj" Id="c38d30cd-8677-422e-b70f-b9ef16212d31" />
+</Solution>
