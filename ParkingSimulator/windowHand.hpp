@@ -1,3 +1,5 @@
+// Window handler class - creates and manages the game window
+
 #ifndef WINDOWHAND_HPP
 #define WINDOWHAND_HPP
 
@@ -9,23 +11,24 @@ public:
     WindowHandler();
     ~WindowHandler();
 
+    // Create the window with given size and title
     bool Create(HINSTANCE hInstance, const wchar_t* className, const wchar_t* windowName, int width, int height);
+    
     HWND GetHandle() const;
-
     void Show(int cmdShow = SW_SHOW);
     void Hide();
-    void Invalidate();
+    void Invalidate();  // Request a redraw
 
 private:
     HWND hwnd;
 
-    // Static callback for Windows message routing
+    // Static callback that Windows calls for messages
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    // Instance method to handle messages
+    // Handles messages for this window
     LRESULT HandleMessage(UINT msg, WPARAM wParam, LPARAM lParam);
 
-    // Static map to associate HWND with WindowHandler instances
+    // Maps window handles to WindowHandler objects
     static std::map<HWND, WindowHandler*> g_windowMap;
 };
 

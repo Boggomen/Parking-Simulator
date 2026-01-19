@@ -30,10 +30,13 @@
     <ClCompile Include="options.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="carGame.cpp">
+    <ClCompile Include="button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="button.cpp">
+    <ClCompile Include="car.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,10 +56,13 @@
     <ClInclude Include="options.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="carGame.hpp">
+    <ClInclude Include="button.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="button.hpp">
+    <ClInclude Include="car.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

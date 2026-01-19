@@ -1,9 +1,11 @@
+// Global variables and constants shared across the project
+
 #ifndef GLOBALS_HPP
 #define GLOBALS_HPP
 
 #include <windows.h>
 
-// Screen states
+// Screen states - which screen is currently shown
 enum ScreenState { SCREEN_MENU, SCREEN_OPTIONS, SCREEN_GAME };
 extern ScreenState currentScreen;
 
@@ -15,7 +17,7 @@ extern ScreenState currentScreen;
 #define BTN_RIGHT   5
 #define BTN_LEFT    6
 
-// Button positions (x, y, width, height)
+// Button position rectangles
 extern RECT btnStartRect;
 extern RECT btnOptionsRect;
 extern RECT btnExitRect;
@@ -23,9 +25,12 @@ extern RECT btnBackRect;
 extern RECT btnRightRect;
 extern RECT btnLeftRect;
 
-// Image handles
-extern HBITMAP hBgImage;
-extern HBITMAP hOBgImage;
+// Image handles - backgrounds
+extern HBITMAP hBgImage;   // Main menu background
+extern HBITMAP hOBgImage;  // Options background
+extern HBITMAP hGBgImage;  // Game background
+
+// Image handles - buttons
 extern HBITMAP hBtnStart;
 extern HBITMAP hBtnOptions;
 extern HBITMAP hBtnExit;

@@ -128,7 +128,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="button.cpp" />
-    <ClCompile Include="carGame.cpp" />
+    <ClCompile Include="car.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="images.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
@@ -137,7 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.hpp" />
-    <ClInclude Include="carGame.hpp" />
+    <ClInclude Include="car.hpp" />
+    <ClInclude Include="game.hpp" />
     <ClInclude Include="globals.hpp" />
     <ClInclude Include="images.hpp" />
     <ClInclude Include="menu.hpp" />

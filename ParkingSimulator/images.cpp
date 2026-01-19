@@ -37,7 +37,7 @@ void LoadImages() {
 
     hGBgImage = (HBITMAP)LoadImage(
         NULL,
-        L"game_bg.bmp", // Game Background
+        L"resources/game_bg.bmp", // Game Background
         IMAGE_BITMAP,
         0, 0,
         LR_LOADFROMFILE
