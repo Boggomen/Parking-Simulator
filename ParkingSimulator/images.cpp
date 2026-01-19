@@ -1,20 +1,27 @@
 #include "images.hpp"
 #include "globals.hpp"
 
-// The actual image handles - definitions for all extern declarations
+// Background Images
 HBITMAP hBgImage = NULL;
-HBITMAP hOBgImage = NULL;      // Added - was missing
+HBITMAP hOBgImage = NULL;  
+HBITMAP hGBgImage = NULL;
+
+//Car Sprite
+HBITMAP raceCar = NULL;
+
+// Button Images
 HBITMAP hBtnStart = NULL;
 HBITMAP hBtnOptions = NULL;
 HBITMAP hBtnExit = NULL;
-HBITMAP hBtnBack = NULL;       // Added - was missing
-HBITMAP hBtnRight = NULL;      // Added - was missing
-HBITMAP hBtnLeft = NULL;       // Added - was missing
+HBITMAP hBtnBack = NULL;       
+HBITMAP hBtnRight = NULL;      
+HBITMAP hBtnLeft = NULL;       
 
+// Putting the images into varibles
 void LoadImages() {
     hBgImage = (HBITMAP)LoadImage(
         NULL,
-        L"resources/mainmenu_bg.bmp",
+        L"resources/mainmenu_bg.bmp", // Main Menu Background
         IMAGE_BITMAP,
         0, 0,
         LR_LOADFROMFILE
@@ -22,7 +29,23 @@ void LoadImages() {
 
     hOBgImage = (HBITMAP)LoadImage(
         NULL,
-        L"resources/options_bg.bmp",
+        L"resources/options_bg.bmp", // Options Background
+        IMAGE_BITMAP,
+        0, 0,
+        LR_LOADFROMFILE
+    );
+
+    hGBgImage = (HBITMAP)LoadImage(
+        NULL,
+        L"game_bg.bmp", // Game Background
+        IMAGE_BITMAP,
+        0, 0,
+        LR_LOADFROMFILE
+    );
+
+    raceCar = (HBITMAP)LoadImage(
+        NULL,
+        L"car.bmp", // Car Sprite
         IMAGE_BITMAP,
         0, 0,
         LR_LOADFROMFILE
@@ -30,7 +53,7 @@ void LoadImages() {
 
     hBtnStart = (HBITMAP)LoadImage(
         NULL,
-        L"resources/btn_start.bmp",
+        L"resources/btn_start.bmp", // Start Button
         IMAGE_BITMAP,
         0, 0,
         LR_LOADFROMFILE
@@ -38,7 +61,7 @@ void LoadImages() {
 
     hBtnOptions = (HBITMAP)LoadImage(
         NULL,
-        L"resources/btn_options.bmp",
+        L"resources/btn_options.bmp", // Options Button
         IMAGE_BITMAP,
         0, 0,
         LR_LOADFROMFILE
@@ -46,15 +69,15 @@ void LoadImages() {
 
     hBtnExit = (HBITMAP)LoadImage(
         NULL,
-        L"resources/btn_exit.bmp",
+        L"resources/btn_exit.bmp", // Exit Button
         IMAGE_BITMAP,
         0, 0,
         LR_LOADFROMFILE
     );
 
-    hBtnBack = (HBITMAP)LoadImage(
+    hBtnBack = (HBITMAP)LoadImage( 
         NULL,
-        L"resources/btn_back.bmp",
+        L"resources/btn_back.bmp", // Back Button
         IMAGE_BITMAP,
         0, 0,
         LR_LOADFROMFILE
@@ -62,7 +85,7 @@ void LoadImages() {
 
     hBtnRight = (HBITMAP)LoadImage(
         NULL,
-        L"resources/right_arrow.bmp",
+        L"resources/right_arrow.bmp", // Right Arrow Button
         IMAGE_BITMAP,
         0, 0,
         LR_LOADFROMFILE
@@ -70,7 +93,7 @@ void LoadImages() {
 
     hBtnLeft = (HBITMAP)LoadImage(
         NULL,
-        L"resources/left_arrow.bmp",
+        L"resources/left_arrow.bmp", // Left Arrow Button
         IMAGE_BITMAP,
         0, 0,
         LR_LOADFROMFILE
@@ -78,8 +101,15 @@ void LoadImages() {
 }
 
 void FreeImages() {
+    // Background Images
     if (hBgImage) DeleteObject(hBgImage);
-    if (hOBgImage) DeleteObject(hOBgImage);   // Fixed: was hBgImage (copy-paste bug)
+    if (hOBgImage) DeleteObject(hOBgImage);
+    if (hGBgImage) DeleteObject(hGBgImage);
+
+    // Car Sprite
+    if (raceCar) DeleteObject(raceCar);
+
+    // Button Images
     if (hBtnStart) DeleteObject(hBtnStart);
     if (hBtnOptions) DeleteObject(hBtnOptions);
     if (hBtnExit) DeleteObject(hBtnExit);

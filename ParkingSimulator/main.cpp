@@ -3,6 +3,7 @@
 #include "globals.hpp"
 #include "images.hpp"
 #include "menu.hpp"
+#include "options.hpp"
 
 // The Program Start Here
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
@@ -20,6 +21,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     // Load images after showing window
     LoadImages();
+    
+    // Initialize buttons after images are loaded
+    InitMenuButtons();
+    InitOptionsButtons();
+    
     window.Invalidate();
 
     MSG msg = {};

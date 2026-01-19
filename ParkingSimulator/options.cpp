@@ -1,17 +1,15 @@
 #include "options.hpp"
 #include "globals.hpp"
 #include "images.hpp"
+#include "button.hpp"
 
-// Button positions for options screen
-RECT btnBackRect = { 60, 400, 135, 35 };
-RECT btnLeftRect = { 100, 200, 16, 16 };
-RECT btnRightRect = { 250, 200, 16, 16 };
+// Options screen buttons
+Button btnBack, btnLeft, btnRight;
 
-void FreeOptionsImages() {
-    if (hOBgImage) { DeleteObject(hOBgImage); hOBgImage = NULL; }
-    if (hBtnBack) { DeleteObject(hBtnBack); hBtnBack = NULL; }
-    if (hBtnLeft) { DeleteObject(hBtnLeft); hBtnLeft = NULL; }
-    if (hBtnRight) { DeleteObject(hBtnRight); hBtnRight = NULL; }
+void InitOptionsButtons() {
+    InitButton(&btnBack, BTN_BACK, 60, 350, 135, 35, hBtnBack, L"Back");
+    InitButton(&btnLeft, BTN_LEFT, 100, 200, 32, 32, hBtnLeft, L"<");
+    InitButton(&btnRight, BTN_RIGHT, 250, 200, 32, 32, hBtnRight, L">");
 }
 
 void DrawOptionsScreen(HDC hdc, RECT* clientRect) {
@@ -33,33 +31,20 @@ void DrawOptionsScreen(HDC hdc, RECT* clientRect) {
         DeleteObject(brush);
     }
 
-    // Draw Back button
-    if (hBtnBack) {
-        DrawBitmap(hdc, hBtnBack, btnBackRect.left, btnBackRect.top,
-                   btnBackRect.right, btnBackRect.bottom);
-    }
-    else {
-        Rectangle(hdc, btnBackRect.left, btnBackRect.top,
-                  btnBackRect.left + btnBackRect.right,
-                  btnBackRect.top + btnBackRect.bottom);
-        TextOut(hdc, btnBackRect.left + 45, btnBackRect.top + 10, L"Back", 4);
-    }
-
-    // Draw Left/Right arrow buttons for settings
-    // Add your option controls here (volume, etc.)
+    // Draw buttons
+    DrawButton(hdc, &btnBack);
+    DrawButton(hdc, &btnLeft);
+    DrawButton(hdc, &btnRight);
 }
 
 BOOL HandleOptionsClick(HWND hwnd, int x, int y) {
-    // Reuse PointInRect from menu.cpp (declared in menu.hpp)
-    extern BOOL PointInRect(int x, int y, RECT* r);
-
-    if (PointInRect(x, y, &btnBackRect)) {
+    if (ButtonHitTest(&btnBack, x, y)) {
         return TRUE;  // Signal to go back to main menu
     }
-    else if (PointInRect(x, y, &btnLeftRect)) {
+    else if (ButtonHitTest(&btnLeft, x, y)) {
         // Handle left arrow (decrease setting)
     }
-    else if (PointInRect(x, y, &btnRightRect)) {
+    else if (ButtonHitTest(&btnRight, x, y)) {
         // Handle right arrow (increase setting)
     }
     return FALSE;

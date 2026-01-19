@@ -1,15 +1,14 @@
 #include "menu.hpp"
 #include "globals.hpp"
 #include "images.hpp"
-#include "options.hpp"              
+#include "options.hpp"
+#include "button.hpp"
 
 // Screen state - starts at main menu
 ScreenState currentScreen = SCREEN_MENU;
 
-// The actual button position variables live here
-RECT btnStartRect = { 60, 250, 135, 35 };
-RECT btnOptionsRect = { 60, 300, 135, 35 };
-RECT btnExitRect = { 60, 350, 135, 35 };
+// Button variables
+Button btnStart, btnOptions, btnExit;
 
 BOOL PointInRect(int x, int y, RECT* r) {
     return (x >= r->left && x < r->left + r->right &&
@@ -45,64 +44,28 @@ void DrawMainMenu(HDC hdc, RECT* clientRect) {
         DeleteObject(brush);
     }
 
-    // Draw Start button
-    if (hBtnStart) {
-        DrawBitmap(hdc, hBtnStart,
-            btnStartRect.left, btnStartRect.top,
-            btnStartRect.right, btnStartRect.bottom);
-    }
-    else {
-        // if image didn't load creates rectangle
-        Rectangle(hdc,
-            btnStartRect.left, btnStartRect.top,
-            btnStartRect.left + btnStartRect.right,
-            btnStartRect.top + btnStartRect.bottom);
-        TextOut(hdc, btnStartRect.left + 30, btnStartRect.top + 15,
-            L"Start Game", 10);
-    }
-
-    // Draw Options button
-    if (hBtnOptions) {
-        DrawBitmap(hdc, hBtnOptions,
-            btnOptionsRect.left, btnOptionsRect.top,
-            btnOptionsRect.right, btnOptionsRect.bottom);
-    }
-    else {
-        // if image didn't load creates rectangle
-        Rectangle(hdc,
-            btnOptionsRect.left, btnOptionsRect.top,
-            btnOptionsRect.left + btnOptionsRect.right,
-            btnOptionsRect.top + btnOptionsRect.bottom);
-        TextOut(hdc, btnOptionsRect.left + 40, btnOptionsRect.top + 15,
-            L"Options", 7);
-    }
-
-    // Draw Exit button
-    if (hBtnExit) {
-        DrawBitmap(hdc, hBtnExit,
-            btnExitRect.left, btnExitRect.top,
-            btnExitRect.right, btnExitRect.bottom);
-    }
-    else {
-        // if image didn't load creates rectangle
-        Rectangle(hdc,
-            btnExitRect.left, btnExitRect.top,
-            btnExitRect.left + btnExitRect.right,
-            btnExitRect.top + btnExitRect.bottom);
-        TextOut(hdc, btnExitRect.left + 50, btnExitRect.top + 15,
-            L"Exit", 4);
-    }
+    // Draw buttons
+    DrawButton(hdc, &btnStart);
+    DrawButton(hdc, &btnOptions);
+    DrawButton(hdc, &btnExit);
 }
 
 void HandleMenuClick(HWND hwnd, int x, int y) {
-    if (PointInRect(x, y, &btnStartRect)) {
-        MessageBox(hwnd, L"Starting the game!", L"Start Game", MB_OK);
+    if (ButtonHitTest(&btnStart, x, y)) {
+        currentScreen = SCREEN_GAME;
+        InvalidateRect(hwnd, NULL, TRUE);
     }
-    else if (PointInRect(x, y, &btnOptionsRect)) {
+    else if (ButtonHitTest(&btnOptions, x, y)) {
         currentScreen = SCREEN_OPTIONS;
-        InvalidateRect(hwnd, NULL, TRUE);  // Redraw window
+        InvalidateRect(hwnd, NULL, TRUE);  
     }
-    else if (PointInRect(x, y, &btnExitRect)) {
+    else if (ButtonHitTest(&btnExit, x, y)) {
         PostMessage(hwnd, WM_CLOSE, 0, 0);
     }
+}
+
+void InitMenuButtons() {
+    InitButton(&btnStart, BTN_START,     60, 250, 135, 35, hBtnStart, L"Start Game");
+    InitButton(&btnOptions, BTN_OPTIONS, 60, 300, 135, 35, hBtnOptions, L"Options");
+    InitButton(&btnExit, BTN_EXIT,       60, 350, 135, 35, hBtnExit, L"Exit");
 }
