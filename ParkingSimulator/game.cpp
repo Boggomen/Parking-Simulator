@@ -27,12 +27,12 @@ void InitGame(HWND hwnd) {
     // Initialize car facing upward (0 radians)
     playerCar.Init(startX, startY, 0.0f);
     
-    // Try to load car image, fallback to rectangle if it fails
+    // Try to load car image, draws rectangle if it fails
     if (!playerCar.LoadCarImage(L"resources/car.png")) {
         OutputDebugString(L"Warning: Could not load car.png, using fallback rendering\n");
     }
     
-    // Start game timer (fires every 16ms for ~60 FPS)
+    // Start game timer
     SetTimer(hwnd, GAME_TIMER_ID, GAME_TIMER_INTERVAL, NULL);
     lastUpdateTime = GetTickCount();
     
@@ -48,7 +48,6 @@ void CleanupGame(HWND hwnd) {
 }
 
 // Checks which keys are currently pressed
-// Uses GetAsyncKeyState for responsive continuous input
 void ProcessGameInput(bool& accelerate, bool& brake, bool& steerLeft, bool& steerRight, bool& handbrake) {
     accelerate = (GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState(VK_UP) & 0x8000);
     brake = (GetAsyncKeyState('S') & 0x8000) || (GetAsyncKeyState(VK_DOWN) & 0x8000);
@@ -69,7 +68,6 @@ void UpdateGame(float deltaTime) {
 
 // Draws everything on the game screen
 void DrawGameScreen(HDC hdc, RECT* clientRect) {
-    // Double buffering setup - draw to memory first to prevent flickering
     HDC hdcMem = CreateCompatibleDC(hdc);
     HBITMAP hbmMem = CreateCompatibleBitmap(hdc, clientRect->right, clientRect->bottom);
     HBITMAP hbmOld = (HBITMAP)SelectObject(hdcMem, hbmMem);
@@ -83,24 +81,24 @@ void DrawGameScreen(HDC hdc, RECT* clientRect) {
         GetObject(hGBgImage, sizeof(BITMAP), &bm);
         
         StretchBlt(hdcMem, 0, 0, clientRect->right, clientRect->bottom,
-                   hdcBg, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+                   hdcBg,  0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
         DeleteDC(hdcBg);
     } else {
-        // Fallback: dark gray background
+        // worst case senario: dark gray background
         HBRUSH brush = CreateSolidBrush(RGB(60, 60, 60));
         FillRect(hdcMem, clientRect, brush);
         DeleteObject(brush);
     }
     
-    // Use GDI+ for smooth rotation and transparency
+    // GDI because rotation of image aswell as using png for image transperacy
     Graphics graphics(hdcMem);
     graphics.SetSmoothingMode(SmoothingModeAntiAlias);
     graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic);
     
-    // Draw car
+    // Draws car
     playerCar.Draw(&graphics);
     
-    // Draw speed display
+    // Draws speed display
     wchar_t speedText[64];
     swprintf_s(speedText, L"km/h: %.0f", (playerCar.speed / 10));
     
@@ -111,13 +109,13 @@ void DrawGameScreen(HDC hdc, RECT* clientRect) {
     graphics.FillRectangle(&bgBrush, 10.0f, 10.0f, 150.0f, 25.0f);
     graphics.DrawString(speedText, -1, &font, PointF(15.0f, 12.0f), &textBrush);
     
-    // Draw control hints at bottom
+    // Draw controls at bottom
     Font smallFont(L"Arial", 10);
     SolidBrush hintBrush(Color(200, 200, 200, 200));
     graphics.DrawString(L"WASD/Arrows: Drive | Space: Handbrake | Esc: Menu", -1, &smallFont, 
                        PointF(10.0f, (float)(clientRect->bottom - 25)), &hintBrush);
     
-    // Copy buffer to screen and cleanup
+    // cleanup
     BitBlt(hdc, 0, 0, clientRect->right, clientRect->bottom, hdcMem, 0, 0, SRCCOPY);
     SelectObject(hdcMem, hbmOld);
     DeleteObject(hbmMem);

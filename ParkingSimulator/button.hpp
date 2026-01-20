@@ -3,11 +3,11 @@
 
 #include <windows.h>
 
-struct Button {
-    RECT rect;          // x, y, width, height
-    HBITMAP image;      // Button image (can be NULL)
+struct Button { 
+    RECT rect;           // x, y, width, height
+    HBITMAP image;       // Button image (can be NULL)
     const wchar_t* text; // Fallback text if no image
-    int id;             // Button identifier
+    int id;              // Button identifier
 };
 
 // Initialize a button
