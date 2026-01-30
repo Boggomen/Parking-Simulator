@@ -3,6 +3,7 @@
 
 using namespace Gdiplus;
 
+// ============= Constructor/Destructor =============
 Car::Car() 
     : x(0), y(0), velocityX(0), velocityY(0), heading(0), speed(0),
       steerAngle(0), isDrifting(false), slipAngle(0), handbrakeActive(false),
@@ -16,6 +17,7 @@ Car::~Car() {
     }
 }
 
+// ============= Initialize Function =============
 void Car::Init(float startX, float startY, float startHeading) {
     x = startX;
     y = startY;
@@ -29,6 +31,7 @@ void Car::Init(float startX, float startY, float startHeading) {
     handbrakeActive = false;
 }
 
+// ============= Load Image Function =============
 bool Car::LoadCarImage(const wchar_t* filename) {
     if (carImage) {
         delete carImage;
@@ -49,19 +52,20 @@ bool Car::LoadCarImage(const wchar_t* filename) {
     return false;
 }
 
-// Keep angle in range -PI to PI
+// ============= Help Functions =============
+// Keeps angle in range -PI to PI
 float Car::NormalizeAngle(float angle) {
     while (angle > PI) angle -= 2.0f * PI;
     while (angle < -PI) angle += 2.0f * PI;
     return angle;
 }
 
-// Calculate angle between where car is pointing vs where it's moving
+// Calculates angle between where car is pointing vs where it's moving
 float Car::CalculateSlipAngle() {
     float velocityMagnitude = sqrtf(velocityX * velocityX + velocityY * velocityY);
     
     if (velocityMagnitude < 1.0f) {
-        return 0.0f;  // No slip when barely moving
+        return 0.0f;
     }
     
     float velocityAngle = atan2f(velocityX, -velocityY);
@@ -70,14 +74,13 @@ float Car::CalculateSlipAngle() {
     return slip;
 }
 
-// Reduce sideways velocity based on grip level
-// High grip = less sliding, low grip = more sliding (drifting)
+// Reduces sideways velocity based on grip level
 void Car::ApplyGrip(float deltaTime, float gripFactor) {
-    // Forward direction (where car is pointing)
+    // Forward direction
     float forwardX = sinf(heading);
     float forwardY = -cosf(heading);
     
-    // Right direction (perpendicular to forward)
+    // Right direction
     float rightX = cosf(heading);
     float rightY = sinf(heading);
     
@@ -93,6 +96,7 @@ void Car::ApplyGrip(float deltaTime, float gripFactor) {
     velocityY = forwardY * forwardSpeed + rightY * lateralSpeed;
 }
 
+// ============= Update Function =============
 void Car::Update(float deltaTime, bool accelerating, bool braking, 
                  bool steerLeft, bool steerRight, bool handbrake) {
     handbrakeActive = handbrake;
@@ -111,11 +115,9 @@ void Car::Update(float deltaTime, bool accelerating, bool braking,
     if (braking) {
         float forwardSpeed = velocityX * forwardX + velocityY * forwardY;
         if (forwardSpeed > 10.0f) {
-            // Braking
             velocityX -= forwardX * CAR_BRAKE_FORCE * deltaTime;
             velocityY -= forwardY * CAR_BRAKE_FORCE * deltaTime;
         } else {
-            // Reverse (slower than forward)
             velocityX -= forwardX * CAR_ACCELERATION * 0.5f * deltaTime;
             velocityY -= forwardY * CAR_ACCELERATION * 0.5f * deltaTime;
         }
@@ -134,7 +136,7 @@ void Car::Update(float deltaTime, bool accelerating, bool braking,
     if (speed > 5.0f) {
         float turnRate = CAR_TURN_SPEED * (speed / CAR_MAX_SPEED);
         
-        // Handbrake increases turn rate to help start drifts
+        // Handbrake increases turn rate
         if (handbrakeActive) {
             turnRate *= 1.5f;
         }
@@ -155,7 +157,7 @@ void Car::Update(float deltaTime, bool accelerating, bool braking,
     // Drift detection
     slipAngle = CalculateSlipAngle();
     
-    // Use hysteresis to prevent drift state from flickering
+    // Hysteresis to prevent drift state from flickering
     if (fabsf(slipAngle) > DRIFT_SLIP_THRESHOLD && speed > 50.0f) {
         isDrifting = true;
     } else if (fabsf(slipAngle) < DRIFT_SLIP_THRESHOLD * 0.5f) {
@@ -193,10 +195,11 @@ void Car::Update(float deltaTime, bool accelerating, bool braking,
     speed = sqrtf(velocityX * velocityX + velocityY * velocityY);
 }
 
+// ============= Draw Function =============
 void Car::Draw(Graphics* graphics) {
     if (!graphics) return;
     
-    // Save graphics state, apply rotation, then restore
+    // Save graphics state
     GraphicsState state = graphics->Save();
     
     graphics->TranslateTransform(x, y);
@@ -209,7 +212,7 @@ void Car::Draw(Graphics* graphics) {
         float halfHeight = height / 2.0f;
         graphics->DrawImage(carImage, -halfWidth, -halfHeight, width, height);
     } else {
-        // Fallback: colored rectangle (red when drifting, blue normally)
+        // Fallback: colored rectangle
         SolidBrush carBrush(isDrifting ? Color(255, 255, 100, 100) : Color(255, 100, 100, 255));
         float halfWidth = 20.0f;
         float halfHeight = 40.0f;

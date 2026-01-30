@@ -1,5 +1,3 @@
-// Program entry point - sets up GDI+, window, and runs the message loop
-
 #include <windows.h>
 #include <gdiplus.h>
 #include "windowHand.hpp"
@@ -12,19 +10,20 @@
 
 using namespace Gdiplus;
 
-// GDI+ token needed for shutdown
+// ============= GDI+ Token =============
 ULONG_PTR gdiplusToken;
 
+// ============= Main Function =============
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     LPSTR pCmdLine, int nCmdShow) {
     
-    // Initialize GDI+ for PNG support and image rotation
+    // Initialize GDI+
     GdiplusStartupInput gdiplusStartupInput;
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
     
     const wchar_t CLASS_NAME[] = L"ParkingGarageGameClass";
 
-    // Create the game window
+    // Create window
     WindowHandler window;
     if (!window.Create(hInstance, CLASS_NAME, L"Parking Garage Game", 800, 600)) {
         GdiplusShutdown(gdiplusToken);
@@ -33,13 +32,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     window.Show(nCmdShow);
 
-    // Load images and set up buttons
+    // Load images and initialize buttons
     LoadImages();
     InitMenuButtons();
     InitOptionsButtons();
     window.Invalidate();
 
-    // Message loop - keeps the program running
+    // Message loop
     MSG msg = {};
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);

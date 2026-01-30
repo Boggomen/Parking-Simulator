@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="button.cpp" />
     <ClCompile Include="car.cpp" />
+    <ClCompile Include="easyGame.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="images.cpp" />
     <ClCompile Include="main.cpp" />
@@ -137,8 +138,10 @@
     <ClCompile Include="windowHand.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="borders.hpp" />
     <ClInclude Include="button.hpp" />
     <ClInclude Include="car.hpp" />
+    <ClInclude Include="easyGame.hpp" />
     <ClInclude Include="game.hpp" />
     <ClInclude Include="globals.hpp" />
     <ClInclude Include="images.hpp" />

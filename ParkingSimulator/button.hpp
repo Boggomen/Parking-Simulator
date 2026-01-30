@@ -3,6 +3,7 @@
 
 #include <windows.h>
 
+// ============= Button Structure =============
 struct Button { 
     RECT rect;           // x, y, width, height
     HBITMAP image;       // Button image (can be NULL)
@@ -10,14 +11,10 @@ struct Button {
     int id;              // Button identifier
 };
 
-// Initialize a button
+// ============= Declaration of Functions =============
 void InitButton(Button* btn, int id, int x, int y, int width, int height, 
                 HBITMAP image, const wchar_t* text);
-
-// Draw a button
 void DrawButton(HDC hdc, Button* btn);
-
-// Check if point is inside button
 BOOL ButtonHitTest(Button* btn, int x, int y);
 
 #endif

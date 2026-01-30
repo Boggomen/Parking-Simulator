@@ -1,5 +1,3 @@
-// Window handler implementation - manages the game window and message handling
-
 #include "windowHand.hpp"
 #include "globals.hpp"
 #include "images.hpp"
@@ -7,8 +5,10 @@
 #include "options.hpp"
 #include "game.hpp"
 
+// ============= Static Member =============
 std::map<HWND, WindowHandler*> WindowHandler::g_windowMap;
 
+// ============= Constructor/Destructor =============
 WindowHandler::WindowHandler() : hwnd(nullptr) {}
 
 WindowHandler::~WindowHandler() {
@@ -18,6 +18,7 @@ WindowHandler::~WindowHandler() {
     }
 }
 
+// ============= Window Creation =============
 bool WindowHandler::Create(HINSTANCE hInstance, const wchar_t* className, const wchar_t* windowName, int width, int height) {
     // Register window class
     WNDCLASS wc = {};
@@ -30,7 +31,7 @@ bool WindowHandler::Create(HINSTANCE hInstance, const wchar_t* className, const 
     // Create the window
     hwnd = CreateWindowEx(
         0, className, windowName,
-        WS_OVERLAPPED,  // Use WS_OVERLAPPEDWINDOW for resizable
+        WS_OVERLAPPED,
         CW_USEDEFAULT, CW_USEDEFAULT,
         width, height,
         NULL, NULL, hInstance, NULL
@@ -43,6 +44,7 @@ bool WindowHandler::Create(HINSTANCE hInstance, const wchar_t* className, const 
     return false;
 }
 
+// ============= Window Functions =============
 HWND WindowHandler::GetHandle() const { return hwnd; }
 
 void WindowHandler::Show(int cmdShow) {
@@ -57,7 +59,7 @@ void WindowHandler::Invalidate() {
     if (hwnd) InvalidateRect(hwnd, nullptr, FALSE);
 }
 
-// Static callback - routes messages to the correct WindowHandler
+// ============= Message Routing =============
 LRESULT CALLBACK WindowHandler::WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     auto it = g_windowMap.find(hwnd);
     if (it != g_windowMap.end()) {
@@ -66,7 +68,7 @@ LRESULT CALLBACK WindowHandler::WindowProc(HWND hwnd, UINT msg, WPARAM wParam, L
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-// Handle Windows messages
+// ============= Message Handler =============
 LRESULT WindowHandler::HandleMessage(UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
     
@@ -80,7 +82,7 @@ LRESULT WindowHandler::HandleMessage(UINT msg, WPARAM wParam, LPARAM lParam) {
             float deltaTime = (currentTime - lastUpdateTime) / 1000.0f;
             lastUpdateTime = currentTime;
             
-            // Prevent huge time jumps
+            // Prevents huge time jumps
             if (deltaTime > 0.1f) deltaTime = 0.1f;
             
             UpdateGame(deltaTime);

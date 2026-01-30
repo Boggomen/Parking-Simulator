@@ -1,5 +1,6 @@
 #include "button.hpp"
 
+// ============= Initialize Function =============
 void InitButton(Button* btn, int id, int x, int y, int width, int height,
                 HBITMAP image, const wchar_t* text) {
     btn->id = id;
@@ -8,6 +9,7 @@ void InitButton(Button* btn, int id, int x, int y, int width, int height,
     btn->text = text;
 }
 
+// ============= Draw Function =============
 void DrawButton(HDC hdc, Button* btn) {
     int x = btn->rect.left;
     int y = btn->rect.top;
@@ -21,7 +23,7 @@ void DrawButton(HDC hdc, Button* btn) {
         DeleteDC(hdcMem);
     }
     else {
-        //draw rectangle with text, last resort
+        // Fallback: draw rectangle with text
         Rectangle(hdc, x, y, x + w, y + h);
         if (btn->text) {
             int textLen = lstrlenW(btn->text);
@@ -30,6 +32,7 @@ void DrawButton(HDC hdc, Button* btn) {
     }
 }
 
+// ============= Hit Test Function =============
 BOOL ButtonHitTest(Button* btn, int x, int y) {
     return (x >= btn->rect.left && x < btn->rect.left + btn->rect.right &&
             y >= btn->rect.top && y < btn->rect.top + btn->rect.bottom);

@@ -1,59 +1,52 @@
-#include "game.hpp"
+#include "easyGame.hpp"
 #include "globals.hpp"
 #include "images.hpp"
-#include "borders.hpp"
+#include "game.hpp"
 #include <cmath>
 #include <cstdio>
 
 using namespace Gdiplus;
 
-// ============= Game State Variables =============
-Car playerCar;
-bool gameInitialized = false;
-DWORD lastUpdateTime = 0;
-Borders gameBorders;
+// ============= Easy Game State Variables =============
+Car easyPlayerCar;
+bool easyGameInitialized = false;
+DWORD easyLastUpdateTime = 0;
 
 // ============= Initialize Function =============
-void InitGame(HWND hwnd) {
-    if (gameInitialized) return;
+void InitEasyGame(HWND hwnd) {
+    if (easyGameInitialized) return;
     
-    // Get window size
+    // Get window size and place car in the center
     RECT clientRect;
     GetClientRect(hwnd, &clientRect);
+    float startX = (float)(clientRect.right / 2);
+    float startY = (float)(clientRect.bottom / 2);
     
-    // Start car at bottom left, facing right (PI/2 radians)
-    float startX = 100.0f;
-    float startY = (float)clientRect.bottom - 60.0f;
-    float startHeading = PI / 2.0f;  // Facing right
-    
-    // Initialize car
-    playerCar.Init(startX, startY, startHeading);
+    // Initialize car facing upward
+    easyPlayerCar.Init(startX, startY, 0.0f);
     
     // Try to load car image
-    if (!playerCar.LoadCarImage(L"resources/car.png")) {
+    if (!easyPlayerCar.LoadCarImage(L"resources/car.png")) {
         OutputDebugString(L"Warning: Could not load car.png, using fallback rendering\n");
     }
     
-    // Initialize borders
-    InitBorders(&gameBorders, &clientRect, playerCar.width, playerCar.height);
-    
     // Start game timer
     SetTimer(hwnd, GAME_TIMER_ID, GAME_TIMER_INTERVAL, NULL);
-    lastUpdateTime = GetTickCount64();
+    easyLastUpdateTime = GetTickCount64();
     
-    gameInitialized = true;
+    easyGameInitialized = true;
 }
 
 // ============= Cleanup Function =============
-void CleanupGame(HWND hwnd) {
-    if (!gameInitialized) return;
+void CleanupEasyGame(HWND hwnd) {
+    if (!easyGameInitialized) return;
     
     KillTimer(hwnd, GAME_TIMER_ID);
-    gameInitialized = false;
+    easyGameInitialized = false;
 }
 
 // ============= Input Function =============
-void ProcessGameInput(bool& accelerate, bool& brake, bool& steerLeft, bool& steerRight, bool& handbrake) {
+void ProcessEasyGameInput(bool& accelerate, bool& brake, bool& steerLeft, bool& steerRight, bool& handbrake) {
     accelerate = (GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState(VK_UP) & 0x8000);
     brake = (GetAsyncKeyState('S') & 0x8000) || (GetAsyncKeyState(VK_DOWN) & 0x8000);
     steerLeft = (GetAsyncKeyState('A') & 0x8000) || (GetAsyncKeyState(VK_LEFT) & 0x8000);
@@ -62,31 +55,16 @@ void ProcessGameInput(bool& accelerate, bool& brake, bool& steerLeft, bool& stee
 }
 
 // ============= Update Function =============
-void UpdateGame(float deltaTime) {
-    if (!gameInitialized) return;
+void UpdateEasyGame(float deltaTime) {
+    if (!easyGameInitialized) return;
     
     bool accelerate, brake, steerLeft, steerRight, handbrake;
-    ProcessGameInput(accelerate, brake, steerLeft, steerRight, handbrake);
-    playerCar.Update(deltaTime, accelerate, brake, steerLeft, steerRight, handbrake);
-    
-    // Apply border collision
-    ApplyBorderCollision(&gameBorders, &playerCar.x, &playerCar.y, 
-                         &playerCar.velocityX, &playerCar.velocityY);
-}
-
-// ============= Get Difficulty Text =============
-const wchar_t* GetDifficultyText() {
-    switch (currentDifficulty) {
-        case DIFF_EASY:     return L"Easy Mode";
-        case DIFF_MEDIUM:   return L"Medium Mode";
-        case DIFF_HARD:     return L"Hard Mode";
-        case DIFF_CREATIVE: return L"Creative Mode";
-        default:            return L"Easy Mode";
-    }
+    ProcessEasyGameInput(accelerate, brake, steerLeft, steerRight, handbrake);
+    easyPlayerCar.Update(deltaTime, accelerate, brake, steerLeft, steerRight, handbrake);
 }
 
 // ============= Display Function =============
-void DrawGameScreen(HDC hdc, RECT* clientRect) {
+void DrawEasyGameScreen(HDC hdc, RECT* clientRect) {
     // Double buffering
     HDC hdcMem = CreateCompatibleDC(hdc);
     HBITMAP hbmMem = CreateCompatibleBitmap(hdc, clientRect->right, clientRect->bottom);
@@ -117,11 +95,11 @@ void DrawGameScreen(HDC hdc, RECT* clientRect) {
     graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic);
     
     // Draw car
-    playerCar.Draw(&graphics);
+    easyPlayerCar.Draw(&graphics);
     
     // Draw speed display
     wchar_t speedText[64];
-    swprintf_s(speedText, L"km/h: %.0f", (playerCar.speed / 10));
+    swprintf_s(speedText, L"km/h: %.0f", (easyPlayerCar.speed / 10));
     
     Font font(L"Arial", 14);
     SolidBrush textBrush(Color(255, 255, 255, 255));
@@ -131,9 +109,8 @@ void DrawGameScreen(HDC hdc, RECT* clientRect) {
     graphics.DrawString(speedText, -1, &font, PointF(15.0f, 12.0f), &textBrush);
     
     // Draw difficulty indicator
-    const wchar_t* diffText = GetDifficultyText();
-    graphics.FillRectangle(&bgBrush, 10.0f, 40.0f, 130.0f, 25.0f);
-    graphics.DrawString(diffText, -1, &font, PointF(15.0f, 42.0f), &textBrush);
+    graphics.FillRectangle(&bgBrush, 10.0f, 40.0f, 100.0f, 25.0f);
+    graphics.DrawString(L"Easy Mode", -1, &font, PointF(15.0f, 42.0f), &textBrush);
     
     // Draw controls at bottom
     Font smallFont(L"Arial", 10);
@@ -149,11 +126,10 @@ void DrawGameScreen(HDC hdc, RECT* clientRect) {
 }
 
 // ============= Key Handler =============
-void HandleGameKeyDown(HWND hwnd, WPARAM wParam) {
+void HandleEasyGameKeyDown(HWND hwnd, WPARAM wParam) {
     if (wParam == VK_ESCAPE) {
-        CleanupGame(hwnd);
+        CleanupEasyGame(hwnd);
         currentScreen = SCREEN_MENU;
         InvalidateRect(hwnd, NULL, TRUE);
     }
 }
-
