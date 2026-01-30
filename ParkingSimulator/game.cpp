@@ -6,10 +6,11 @@
 
 using namespace Gdiplus;
 
-// Game state variables
-Car playerCar;                // The player's car object
-bool gameInitialized = false; // Whether the game is currently running
-DWORD lastUpdateTime = 0;     // Time of last update (for calculating delta time)
+// ============= Game State Variables =============
+Car playerCar;
+bool gameInitialized = false;
+DWORD lastUpdateTime = 0;
+Borders gameBorders;
 
 // Reference to game background from images.cpp
 extern HBITMAP hGBgImage;
