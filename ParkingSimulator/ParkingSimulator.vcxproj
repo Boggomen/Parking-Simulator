@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="button.cpp" />
     <ClCompile Include="car.cpp" />
+    <ClCompile Include="creativeGame.cpp" />
     <ClCompile Include="easyGame.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="images.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="borders.hpp" />
     <ClInclude Include="button.hpp" />
     <ClInclude Include="car.hpp" />
+    <ClInclude Include="creativeGame.hpp" />
     <ClInclude Include="easyGame.hpp" />
     <ClInclude Include="game.hpp" />
     <ClInclude Include="globals.hpp" />
