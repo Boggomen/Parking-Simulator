@@ -2,6 +2,7 @@
 #include "globals.hpp"
 #include "images.hpp"
 #include "borders.hpp"
+#include "creativeGame.hpp"
 #include <cmath>
 #include <cstdio>
 
@@ -15,6 +16,10 @@ Borders gameBorders;
 
 // ============= Initialize Function =============
 void InitGame(HWND hwnd) {
+    if (currentDifficulty == DIFF_CREATIVE) {
+        InitCreativeGame(hwnd);
+        return;
+    }
     if (gameInitialized) return;
     
     // Get window size
@@ -46,6 +51,10 @@ void InitGame(HWND hwnd) {
 
 // ============= Cleanup Function =============
 void CleanupGame(HWND hwnd) {
+    if (creativeGameInitialized) {
+        CleanupCreativeGame(hwnd);
+        return;
+    }
     if (!gameInitialized) return;
     
     KillTimer(hwnd, GAME_TIMER_ID);
@@ -63,6 +72,10 @@ void ProcessGameInput(bool& accelerate, bool& brake, bool& steerLeft, bool& stee
 
 // ============= Update Function =============
 void UpdateGame(float deltaTime) {
+    if (creativeGameInitialized) {
+        UpdateCreativeGame(deltaTime);
+        return;
+    }
     if (!gameInitialized) return;
     
     bool accelerate, brake, steerLeft, steerRight, handbrake;
@@ -87,6 +100,10 @@ const wchar_t* GetDifficultyText() {
 
 // ============= Display Function =============
 void DrawGameScreen(HDC hdc, RECT* clientRect) {
+    if (creativeGameInitialized) {
+        DrawEasyCreativeScreen(hdc, clientRect);
+        return;
+    }
     // Double buffering
     HDC hdcMem = CreateCompatibleDC(hdc);
     HBITMAP hbmMem = CreateCompatibleBitmap(hdc, clientRect->right, clientRect->bottom);
@@ -150,6 +167,10 @@ void DrawGameScreen(HDC hdc, RECT* clientRect) {
 
 // ============= Key Handler =============
 void HandleGameKeyDown(HWND hwnd, WPARAM wParam) {
+    if (creativeGameInitialized) {
+        HandleCreativeGameKeyDown(hwnd, wParam);
+        return;
+    }
     if (wParam == VK_ESCAPE) {
         CleanupGame(hwnd);
         currentScreen = SCREEN_MENU;

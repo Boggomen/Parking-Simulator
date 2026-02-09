@@ -103,13 +103,10 @@ void DrawEasyGameScreen(HDC hdc, RECT* clientRect) {
     
     Font font(L"Arial", 14);
     SolidBrush textBrush(Color(255, 255, 255, 255));
-    SolidBrush bgBrush(Color(150, 0, 0, 0));
     
-    graphics.FillRectangle(&bgBrush, 10.0f, 10.0f, 150.0f, 25.0f);
     graphics.DrawString(speedText, -1, &font, PointF(15.0f, 12.0f), &textBrush);
     
     // Draw difficulty indicator
-    graphics.FillRectangle(&bgBrush, 10.0f, 40.0f, 100.0f, 25.0f);
     graphics.DrawString(L"Easy Mode", -1, &font, PointF(15.0f, 42.0f), &textBrush);
     
     // Draw controls at bottom

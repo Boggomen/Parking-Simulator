@@ -6,16 +6,16 @@
 #include <cmath>
 
 // ============= Physics Constants =============
-const float PI = 3.14159265358979f;
-const float CAR_MAX_SPEED = 300.0f;
-const float CAR_ACCELERATION = 200.0f;
-const float CAR_BRAKE_FORCE = 300.0f;
-const float CAR_FRICTION = 50.0f;
-const float CAR_TURN_SPEED = 3.0f;
+const float PI =       3.14159265358979f;
+const float CAR_MAX_SPEED =       300.0f;
+const float CAR_ACCELERATION =    200.0f;
+const float CAR_BRAKE_FORCE =     300.0f;
+const float CAR_FRICTION =         50.0f;
+const float CAR_TURN_SPEED =        3.0f;
 const float DRIFT_SLIP_THRESHOLD = 0.26f;
-const float NORMAL_GRIP = 0.95f;
-const float DRIFT_GRIP = 0.7f;
-const float HANDBRAKE_GRIP = 0.4f;
+const float NORMAL_GRIP =          0.95f;
+const float DRIFT_GRIP =            0.7f;
+const float HANDBRAKE_GRIP =        0.4f;
 
 // ============= Car Class =============
 class Car {
